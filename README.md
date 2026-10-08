@@ -16,6 +16,9 @@
   <img src="./docs/assets/badges/static-only.svg" alt="static-only"/>
 </p>
 
+> [!WARNING]
+> **For testing and demonstration purposes only.** This is a personal reference demo provided "as is" under the [MIT License](LICENSE), without warranty or support. It is not an official Microsoft product or sample, has not been through a production security review, and is not intended for production use. Review, test, and harden it before reusing any part of it, deploy only to non-production subscriptions, and never use real customer or personal data.
+
 A reusable, governance-first starting point for running a **governed MCP tool platform** on Azure: enterprise **Model Context Protocol (MCP) tool governance** at scale, with **end-user identity propagated** through the gateway to the tool, and **per-team quotas and chargeback** on every tool call. It combines two real Microsoft upstream projects into one coherent architecture:
 
 | Plane | Upstream | Contributes |
@@ -275,6 +278,18 @@ Any hit is a hard block — clean the tree and rotate anything that leaked.
 
 ---
 
+## Disclaimer
+
+> [!CAUTION]
+> This project is provided for testing, learning, and demonstration purposes only. It is not an official Microsoft product, sample, or service, and it is not supported under any Microsoft support program. Azure services, APIs, and pricing referenced here change over time — validate against current Microsoft Learn documentation before relying on any detail. Deploying it creates billable Azure resources; you are responsible for their cost, security, and cleanup.
+
+## License
+
+> [!NOTE]
+> Released under the [MIT License](LICENSE).
+
+---
+
 Next: [00 Reproduce this demo →](./docs/00-reproduce-this-demo.md)
 
-*Last updated: 2026-10-02*
+*Last updated: 2026-10-08*
