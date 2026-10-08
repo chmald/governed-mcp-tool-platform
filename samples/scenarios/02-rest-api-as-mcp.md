@@ -147,7 +147,7 @@ If the source API needs real end-user identity for its own authorization (row-le
 
 1. Confirm the API is resolvable and its operations are what you expect (step 1 above) **before** publishing.
 2. Run [`../../scripts/validate_mcp_endpoint.py`](../../scripts/validate_mcp_endpoint.py) against `https://<apim-gateway-host>/mcp/<ASSET_PATH>/mcp` (note the trailing `/mcp`) to confirm `initialize` → `tools/list` succeed and the exposed `operationNames` appear as tools.
-3. Deliberately test **both branches of the 401 trap**: call `tools/call` once before resolving the key-forwarding decision (step 3) to see the partial failure firsthand, then again after fixing it, to confirm the difference. This is worth doing once so the failure mode is recognizable in the field rather than mistaken for a broken deployment.
+3. Deliberately test **both branches of the 401 trap**: call `tools/call` once before resolving the key-forwarding decision (step 3) to see the partial failure firsthand, then again after fixing it, to confirm the difference. This is worth doing once so the failure mode is recognizable in real deployments rather than mistaken for a broken deployment.
 4. If you set `forwardSubscriptionKeyToSource: true`, confirm the Access Contract's `apiNameMapping` also grants the consumer's product access to the source API itself, not just the synthesized MCP asset.
 
 ---

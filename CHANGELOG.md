@@ -6,6 +6,12 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/). Dates ar
 
 ---
 
+## Unreleased
+
+- Docs: rewrote for external audiences; removed internal terminology. Demo and testing guidance now says "live demo" / "live session" instead of assuming a customer audience, scenario tables address the reader ("What you want"), the locked-decisions note no longer refers to a separate decision record, and the testing-matrix diagram labels were updated (PNG re-exported).
+
+---
+
 ## 2026-08-14 — Alignment review against Microsoft Learn
 
 Reviewed the API Management side of the pattern against current Microsoft Learn documentation for MCP server support. **Everything below is a correction to this pattern, not a change in upstream behaviour.**

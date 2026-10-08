@@ -83,7 +83,7 @@ If you get a `404` on a `mcp-existing` asset, the first thing to check is whethe
 
 ### When you should not use this pattern at all
 
-If your tools genuinely are REST APIs already managed in API Management, `mcp-from-api` gives you an MCP surface with **zero additional compute**. You do not need a Kubernetes runtime, session affinity, or this landing zone. Say so to the customer rather than over-architecting.
+If your tools genuinely are REST APIs already managed in API Management, `mcp-from-api` gives you an MCP surface with **zero additional compute**. You do not need a Kubernetes runtime, session affinity, or this landing zone. Choose the simpler path rather than over-architecting.
 
 This pattern earns its complexity when MCP servers are arbitrary workloads that must be hosted, scaled, and session-affine.
 
@@ -273,7 +273,7 @@ Underscores in secret names are normalized to hyphens (`MCP_TOOL_API_KEY` → `M
 
 ## What API Management provides natively — and what it does not
 
-Verified against Microsoft Learn, 2026-08-14. Re-check before a customer-facing build; this surface is moving.
+Verified against Microsoft Learn, 2026-08-14. Re-check before a production build; this surface is moving.
 
 | Capability | State | Source |
 |---|---|---|

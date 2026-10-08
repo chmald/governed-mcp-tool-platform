@@ -352,7 +352,7 @@ Run this after any deploy or policy change, alongside the governance tests in [0
 
 ## Source pages referenced in this document
 
-Verify against the live pages before reusing exact field names, portal paths, or policy syntax in a customer-facing artifact — Microsoft revises these regularly, and this pattern verifies drift the same way (see the root [README.md § Upstream pins](../README.md#upstream-pins)).
+Verify against the live pages before reusing exact field names, portal paths, or policy syntax in a published artifact — Microsoft revises these regularly, and this pattern verifies drift the same way (see the root [README.md § Upstream pins](../README.md#upstream-pins)).
 
 | Page | Cited for | Verified |
 |---|---|---|

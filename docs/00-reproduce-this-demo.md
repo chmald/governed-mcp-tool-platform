@@ -291,7 +291,7 @@ Confirm before Part A. Full detail in [02-prerequisites.md](./02-prerequisites.m
 
 ## Part G — Prove it *(~30 min)*
 
-**Goal:** every control demonstrably engages. **Do not skip before a customer session.**
+**Goal:** every control demonstrably engages. **Do not skip before a live demo.**
 
 → [04-testing.md](./04-testing.md)
 
@@ -332,7 +332,7 @@ When you need something demonstrable today and are willing to accept an insecure
 | Part F publish | Access Contract | No quota or chargeback |
 | One smoke test | Everything else | Unverified controls |
 
-**Never show a compressed build to a customer as representative.** Label it a lab, and never leave one running with an internet-reachable, HTTP-only origin.
+**Never present a compressed build as representative.** Label it a lab, and never leave one running with an internet-reachable, HTTP-only origin.
 
 ---
 

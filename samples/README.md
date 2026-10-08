@@ -14,7 +14,7 @@ This pattern ships with exactly one working reference server and four **design-a
 | Code you maintain | Yes, it's yours to fork | Varies by scenario — from *none* (scenario 2) to *all of it* (scenario 3) |
 | Ready to deploy as-is | Yes | No — each is a starting point you adapt to a real tool/workload |
 
-The reference server exists to prove the seam between the two planes works. It is deliberately too trivial to be an example of *what to build* — that's what this catalog is for. The originating requirement for this pattern was that it "can be used to expand on several examples" and be "a good starting point for several projects." This catalog is that expansion surface, kept generic and domain-agnostic so it applies to developer-platform tools, line-of-business data tools, operational tooling, or partner-facing catalogs alike — the same way the rest of this pattern is generic on purpose (see [`../README.md`](../README.md)).
+The reference server exists to prove the seam between the two planes works. It is deliberately too trivial to be an example of *what to build* — that's what this catalog is for. This pattern is meant to be expanded into several examples and to serve as a starting point for several projects. This catalog is that expansion surface, kept generic and domain-agnostic so it applies to developer-platform tools, line-of-business data tools, operational tooling, or partner-facing catalogs alike — the same way the rest of this pattern is generic on purpose (see [`../README.md`](../README.md)).
 
 Every scenario below assumes the baseline platform (both planes, per [`../01-architecture.md`](../docs/01-architecture.md)) is **already deployed** — these are extensions on top of a working landing zone, not alternate ways to stand one up. Start at [`../02-prerequisites.md`](../docs/02-prerequisites.md) / [`../03-deployment.md`](../docs/03-deployment.md) if that isn't true yet.
 
@@ -22,7 +22,7 @@ Every scenario below assumes the baseline platform (both planes, per [`../01-arc
 
 ## Decision table — what to start from
 
-| What the customer wants | Start from | What it exercises | Rough effort |
+| What you want | Start from | What it exercises | Rough effort |
 |---|---|---|---|
 | "We found (or already use) a community/third-party MCP server that only speaks **stdio**" — true of most community MCP servers today | [`01-stdio-bridge`](./scenarios/01-stdio-bridge.md) | `mcp-proxy` adapter bridging, the upstream trust boundary, tool-surface allow-listing as the primary compensating control | Low–Medium — hours once the image is vetted and built; most of the effort is the trust review, not the wiring |
 | "Our 'tools' are already REST APIs onboarded in API Management" | [`02-rest-api-as-mcp`](./scenarios/02-rest-api-as-mcp.md) | `assetType: mcp-from-api`, zero additional compute, the internal-hop 401 trap | Low — hours; no runtime plane, no new compute, just a Publish Contract asset |

@@ -95,7 +95,7 @@ The pattern is **thin-code by design**: the integration itself is declarative pa
 
 ## Locked design decisions
 
-These are **the v1 baseline**. Deviate only with an explicit decision record and updated guidance.
+These are **the v1 baseline**. To deviate, record the reason and update this table and the guidance alongside the change.
 
 | # | Decision | Choice | Why |
 |---|---|---|---|
@@ -184,7 +184,7 @@ Full detail in [02-prerequisites.md](./docs/02-prerequisites.md):
 
 ### Use this pattern when
 
-- The customer wants to expose **more than a handful of MCP servers** to more than one consuming team, and needs onboarding, quota, and chargeback to be a repeatable process rather than a ticket
+- You want to expose **more than a handful of MCP servers** to more than one consuming team, and needs onboarding, quota, and chargeback to be a repeatable process rather than a ticket
 - MCP servers are **arbitrary containers** — internally built, community stdio servers, or remote endpoints — and teams need **self-service registration** without a platform redeploy
 - MCP sessions are **stateful** and must survive horizontal scaling
 - The organization **already governs LLM traffic** through an AI gateway and wants tool traffic under the same control plane, the same key, and the same cost model
@@ -223,7 +223,7 @@ Each scenario documents when **not** to use it, the architecture delta, the exac
 ## Maturity and honesty notes
 
 > [!IMPORTANT]
-> This pattern deliberately documents where the ground is soft. Read these before putting it in front of a customer.
+> This pattern deliberately documents where the ground is soft. Read these before presenting or adopting it.
 
 1. **This specific composition is not an official Microsoft reference architecture.** Both upstreams are real and Microsoft-authored, and the Publish Contract seam is a supported extensibility point — but neither repository documents fronting the MCP Gateway with API Management. Present it as an integration you are standing up and validating, not as a published Microsoft blueprint.
 2. **Protocol-era risk is the largest single risk.** The MCP runtime's session model assumes the legacy session-oriented protocol. A newer spec revision removes protocol-level sessions entirely, and upstream tracking for dual-era support is open. Pin your client and server SDK versions deliberately and test against the exact revision your client speaks.

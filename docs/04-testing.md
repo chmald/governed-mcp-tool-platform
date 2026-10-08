@@ -43,13 +43,13 @@ Prerequisite: [03-deployment.md](./03-deployment.md) complete through Phase 8.
 | [1. Smoke](#1-smoke-tests) | Is anything alive? | Every deploy |
 | [2. Functional](#2-functional-tests) | Does MCP work end to end? | Every deploy |
 | [3. Session affinity](#3-session-affinity-tests) | Do stateful sessions survive scale-out? | Every deploy, and after any replica change |
-| [4. Governance](#4-governance-tests-negative-by-design) | Do the controls actually reject? | Every deploy; **before any customer demo** |
+| [4. Governance](#4-governance-tests-negative-by-design) | Do the controls actually reject? | Every deploy; **before any live demo** |
 | [5. Identity](#5-identity-and-token-flow-tests) | Does the right principal reach the runtime? | Every deploy; after any identity-mode change |
 | [6. Resilience](#6-resilience-tests) | Does failure stay contained? | Before production sign-off |
 | [7. Streaming](#7-streaming-integrity-tests) | Did a policy break SSE? | **After any policy change** |
 | [8. Observability](#8-observability-and-telemetry-tests) | Is MCP traffic actually observable? | Every deploy; after any policy or diagnostic-setting change |
 | [9. Regression](#9-regression-harness) | Did an upstream bump break us? | After any upstream version change |
-| [10. Demo script](#10-demo-script) | Can I tell the story in 15 minutes? | Before a customer session |
+| [10. Demo script](#10-demo-script) | Can I tell the story in 15 minutes? | Before a live session |
 
 ## Validation status
 
@@ -204,7 +204,7 @@ Send session identifiers containing `../`, a very long string, and shell metacha
 
 ## 4. Governance tests (negative by design)
 
-**Run every one of these before a customer demo.** Each proves a control engages.
+**Run every one of these before a live demo.** Each proves a control engages.
 
 | # | Test | Expected | Proves |
 |---|---|---|---|
