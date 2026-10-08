@@ -1,0 +1,175 @@
+{
+  "_template": true,
+  "_note": "COMMITTED REFERENCE TEMPLATE. Copy to 'demo-ids.local.json' (gitignored) and populate that copy after your first deployment. Pipelines do NOT read this file at runtime — CI/CD values come from an Azure DevOps variable group or Key Vault. Never commit a populated copy, and never place a real key, token, or connection string in either file.",
+  "_lastUpdated": "2026-08-14",
+
+  "tenant": {
+    "tenantId": "<TENANT_ID>",
+    "tenantDomain": "<contoso.onmicrosoft.com>",
+    "_note": "This pattern spans two planes that MAY live in different subscriptions but MUST share one Entra tenant — the MCP Gateway app registration has to be resolvable by both the caller and API Management."
+  },
+
+  "governancePlane": {
+    "_note": "Citadel Governance Hub — Azure-Samples/ai-hub-gateway-solution-accelerator @ citadel-v1",
+    "subscriptionId": "<SUBSCRIPTION_ID>",
+    "resourceGroupName": "<rg-citadel-governance-hub>",
+    "location": "<azure-region>",
+    "azdEnvironmentName": "<citadel-dev>",
+    "apim": {
+      "name": "<apim-instance-name>",
+      "sku": "StandardV2",
+      "skuUnits": 1,
+      "gatewayHost": "<apim-instance-name>.azure-api.net",
+      "resourceId": "<apim-resource-id>"
+    },
+    "foundry": {
+      "accountName": "<foundry-account-name>",
+      "endpoint": "https://<foundry-account-name>.services.ai.azure.com",
+      "projectName": "<foundry-project-name>"
+    },
+    "observability": {
+      "logAnalyticsWorkspaceId": "<law-resource-id>",
+      "appInsightsName": "<appi-name>",
+      "appInsightsConnectionStringRef": "<keyvault-secret-uri-or-variable-group-ref>"
+    },
+    "finops": {
+      "eventHubNamespace": "<evhns-name>",
+      "cosmosAccountName": "<cosmos-account-name>",
+      "logicAppName": "<logic-usage-ingestion>"
+    },
+    "network": {
+      "vnetName": "<vnet-name>",
+      "vnetAddressSpace": "10.170.0.0/24",
+      "apimSubnetPrefix": "10.170.0.0/26",
+      "privateEndpointSubnetPrefix": "10.170.0.64/26",
+      "functionAppSubnetPrefix": "10.170.0.128/26",
+      "agentSubnetPrefix": "10.170.0.192/26"
+    },
+    "apiCenter": {
+      "enabled": false,
+      "serviceName": "<apic-name>",
+      "workspaceName": "default"
+    }
+  },
+
+  "mcpPlane": {
+    "_note": "microsoft/mcp-gateway on AKS. NO Helm chart and NO git tags upstream — pin by commit SHA.",
+    "subscriptionId": "<SUBSCRIPTION_ID>",
+    "resourceGroupName": "<rg-mcp-gateway>",
+    "location": "<azure-region>",
+    "aks": {
+      "clusterName": "<mg-aks-name>",
+      "nodeVmSize": "Standard_D4ds_v5",
+      "nodeCount": 2,
+      "oidcIssuerUrl": "<aks-oidc-issuer-url>",
+      "adapterNamespace": "adapter"
+    },
+    "acr": {
+      "name": "<acr-name>",
+      "loginServer": "<acr-name>.azurecr.io"
+    },
+    "cosmos": {
+      "accountName": "<mg-cosmos-account>",
+      "databaseName": "<mcpgateway-db>",
+      "_containersExpected": [
+        "AdapterContainer",
+        "CacheContainer",
+        "ToolContainer",
+        "AgentContainer",
+        "SessionContainer"
+      ],
+      "_containerNote": "Upstream infra docs list only the first three. AgentContainer and SessionContainer are referenced in code for the preview Agents/Sessions feature. Verify all required containers exist before enabling that preview."
+    },
+    "applicationGateway": {
+      "name": "<mg-appgw-name>",
+      "publicIpFqdn": "<label>.<region>.cloudapp.azure.com",
+      "httpsListenerConfigured": false,
+      "_tlsNote": "Upstream ships an HTTP:80 listener only. This MUST be false-to-true before API Management is pointed at it. See docs/03-deployment.md Phase 4."
+    },
+    "identity": {
+      "gatewayManagedIdentityClientId": "<uami-client-id>",
+      "workloadIdentityClientId": "<workload-uami-client-id>",
+      "workloadServiceAccountName": "workload-sa"
+    },
+    "publicOrigin": "https://<mcp-gateway-public-origin>"
+  },
+
+  "entra": {
+    "_note": "Single app registration fronting the MCP Gateway. Values here are identifiers only — never store the client secret; prefer federated credentials / workload identity.",
+    "mcpGatewayAppRegistration": {
+      "displayName": "<mcp-gateway-app>",
+      "clientId": "<CLIENT_ID>",
+      "applicationIdUri": "api://<CLIENT_ID>",
+      "exposedScope": "access",
+      "defaultScope": "api://<CLIENT_ID>/.default",
+      "appRoles": ["mcp.admin", "mcp.engineer"],
+      "preAuthorizedClients": {
+        "visualStudioCode": "aebc6443-996d-45c2-90f0-388ff96faa56",
+        "azureCli": "04b07795-8ddb-461a-bbee-02f9e1bf7b46"
+      }
+    }
+  },
+
+  "publishContract": {
+    "_note": "Citadel Publish Contract asset that exposes the MCP Gateway through API Management.",
+    "assetType": "mcp-existing",
+    "assetName": "<mcp-platform-tools>",
+    "path": "<mcp-platform-tools>",
+    "transportType": "streamable",
+    "useAssetTypePathPrefix": true,
+    "publishedEndpoint": "https://<apim-instance-name>.azure-api.net/mcp/<path>",
+    "backendName": "<mcp-platform-tools-backend>",
+    "backendUrl": "https://<mcp-gateway-public-origin>",
+    "identityMode": "B",
+    "backendAuthType": "none",
+    "subscriptionRequired": true,
+    "subscriptionKeyHeaderName": "api-key",
+    "circuitBreaker": {
+      "failureCount": 3,
+      "failureInterval": "PT5M",
+      "tripDuration": "PT1M",
+      "acceptRetryAfter": true
+    }
+  },
+
+  "accessContract": {
+    "_note": "Citadel Access Contract that grants a consuming business unit governed access. Subscription KEYS are never stored here — retrieve them from API Management or Key Vault at use time.",
+    "productName": "<MULTI-{BusinessUnit}-{UseCase}-{ENV}>",
+    "productId": "<apim-product-id>",
+    "subscriptionName": "<apim-subscription-name>",
+    "subscriptionKeyRef": "<keyvault-secret-uri>",
+    "quota": {
+      "mcpCallsPerPeriod": "<integer>",
+      "renewalPeriodSeconds": "<integer>",
+      "llmTokensPerMinute": "<integer>"
+    }
+  },
+
+  "sampleAdapter": {
+    "_note": "The reference MCP server from samples/mcp-server, registered against the MCP Gateway control plane.",
+    "adapterName": "<sample-mcp-server>",
+    "imageName": "<sample-mcp-server>",
+    "imageVersion": "1.0.0",
+    "replicaCount": 2,
+    "requiredRoles": ["mcp.engineer"],
+    "useWorkloadIdentity": false,
+    "directClientUrl": "https://<mcp-gateway-public-origin>/adapters/<sample-mcp-server>/mcp",
+    "governedClientUrl": "https://<apim-instance-name>.azure-api.net/mcp/<path>"
+  },
+
+  "upstreamPins": {
+    "_note": "Pin by commit SHA. microsoft/mcp-gateway publishes NO releases and NO tags, and citadel-v1 is a moving branch.",
+    "citadelGovernanceHub": {
+      "repo": "Azure-Samples/ai-hub-gateway-solution-accelerator",
+      "branch": "citadel-v1",
+      "commit": "06f7ea6c2f99371900feefba11c10212b16364b4",
+      "verifiedOn": "2026-08-14"
+    },
+    "mcpGateway": {
+      "repo": "microsoft/mcp-gateway",
+      "branch": "main",
+      "commit": "59201a91f0c033dab7259f7c3c27be15353dafa4",
+      "verifiedOn": "2026-08-14"
+    }
+  }
+}

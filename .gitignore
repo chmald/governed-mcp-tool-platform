@@ -1,0 +1,96 @@
+# ---------------------------------------------------------------------------
+# Secrets — NEVER commit. Rotate immediately if any of these are ever pushed.
+# ---------------------------------------------------------------------------
+*.pem
+*.key
+*.pfx
+*.p12
+*.cer
+secrets.json
+.sp-secret.json
+sp-secret.json
+federated-credential.json
+*.publishsettings
+.env
+.env.*
+!.env.example
+azure.env
+apim-subscription-keys.txt
+
+# ---------------------------------------------------------------------------
+# Populated local deployment state (the committed reference is
+# demo-ids.template.json — never commit the populated copy).
+# ---------------------------------------------------------------------------
+demo-ids.local.json
+demo-ids.json
+*.local.json
+!demo-ids.template.json
+.azure/
+.azd/
+
+# ---------------------------------------------------------------------------
+# IaC build / plan output
+# ---------------------------------------------------------------------------
+*.whatif.json
+*.whatif.txt
+infra/**/*.json.bak
+main.build.json
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# ---------------------------------------------------------------------------
+# Kubernetes / Helm local state
+# ---------------------------------------------------------------------------
+kubeconfig
+kubeconfig.*
+*.kubeconfig
+charts/*.tgz
+values.local.yaml
+values.*.local.yaml
+
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+.coverage
+htmlcov/
+
+# ---------------------------------------------------------------------------
+# Node (sample MCP clients / tooling)
+# ---------------------------------------------------------------------------
+node_modules/
+npm-debug.log*
+pnpm-debug.log*
+.pnpm-store/
+
+# ---------------------------------------------------------------------------
+# IDE / OS
+# ---------------------------------------------------------------------------
+.vscode/
+!.vscode/mcp.json.example
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+
+# ---------------------------------------------------------------------------
+# Logs / scratch
+# ---------------------------------------------------------------------------
+*.log
+logs/
+scratch/
+tmp/

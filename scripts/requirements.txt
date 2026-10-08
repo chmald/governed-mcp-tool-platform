@@ -1,0 +1,21 @@
+# ---------------------------------------------------------------------------
+# Python dependencies for the OPERATOR WORKSTATION only.
+#
+# These packages are needed to run scripts/validate_mcp_endpoint.py and the
+# pytest suite under tests/. They are NOT required by, and are not installed
+# into, any deployed service in this pattern:
+#   - Citadel Governance Hub (Azure API Management / Foundry / Event Hub /
+#     Cosmos DB / Logic App) is deployed via azd/bicep, not this file.
+#   - MCP Gateway / Tool Gateway run as prebuilt container images on AKS.
+#   - samples/mcp-server is deliberately dependency-light (stdlib only) so
+#     its own container build does not consume this file.
+#
+# Install with:
+#   pip install -r scripts/requirements.txt
+# ---------------------------------------------------------------------------
+
+httpx==0.27.2
+pytest==8.3.3
+pytest-asyncio==0.24.0
+azure-identity==1.19.0
+rich==13.9.2

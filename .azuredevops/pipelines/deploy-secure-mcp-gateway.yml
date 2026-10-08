@@ -1,0 +1,387 @@
+# deploy-secure-mcp-gateway.yml
+#
+# Multi-stage Azure DevOps pipeline for the "secure-mcp-gateway-landing-zone"
+# demo pattern. Deploys Plane 1 (Citadel Governance Hub: APIM + Foundry +
+# supporting services, via the pinned ai-hub-gateway-solution-accelerator
+# clone) and Plane 2 (the MCP Gateway on AKS), builds the sample MCP server
+# image, publishes the MCP Gateway through APIM via the Citadel Publish
+# Contract, and smoke-tests the resulting governed endpoint.
+#
+# IMPORTANT -- authentication model:
+#   The Azure service connection referenced below (azureServiceConnection)
+#   already scopes every AzureCLI@2 task to a single, specific tenant and
+#   subscription for the lifetime of that task's `az` session. Because of
+#   that, NO interactive `az login` belongs anywhere in this pipeline --
+#   interactive, tenant-explicit `az login` (as used by
+#   scripts/Register-McpAdapter.ps1 and scripts/Publish-McpAsset.ps1's
+#   local-operator flows) is strictly a workstation-only convenience for
+#   humans juggling multiple ambient tenants. In CI, the service connection
+#   IS the tenant/subscription boundary; the same .ps1 scripts run here too,
+#   but their tenant/subscription verification step should simply confirm
+#   (never re-authenticate) against the identity the service connection
+#   already established.
+#
+# All secrets (subscription keys, client secrets, tokens) come exclusively
+# from the referenced variable group / Key Vault-linked variable group --
+# never inline in this file.
+
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - samples/mcp-server/**
+      - scripts/**
+      - tests/**
+      - infra/**
+
+pr:
+  branches:
+    include:
+      - main
+
+variables:
+  # <VARIABLE_GROUP_NAME> must define (directly or via a linked Key Vault):
+  #   tenantId, subscriptionId, location, acrName, acrLoginServer,
+  #   mcpGatewayBaseUrl, apimGatewayHost, mcpClientId, mcpTokenScope,
+  #   mcpSubscriptionKey (secret), acceleratorPath,
+  #   mcpPlaneResourceGroup, aksClusterName, appGatewayName,
+  #   mcpResourceLabel, governancePlaneResourceGroup, apimInstanceName
+  - group: <VARIABLE_GROUP_NAME>
+  - name: azureServiceConnection
+    value: '<AZURE_SERVICE_CONNECTION_NAME>'
+  - name: pythonVersion
+    value: '3.11'
+  - name: sampleServerImageName
+    value: 'mcp-samples/mcp-sample-server'
+
+  # ---------------------------------------------------------------------------
+  # Upstream pins. These live in source control (not the variable group) because
+  # they are public, non-secret, and reproducibility depends on them being
+  # reviewable in a diff.
+  #
+  # microsoft/mcp-gateway publishes NO releases and NO tags, so the commit SHA
+  # is the only durable pin. citadel-v1 is an ACTIVE branch -- pin the SHA
+  # rather than tracking the branch head.
+  # ---------------------------------------------------------------------------
+  - name: mcpGatewayCommit
+    value: '59201a91f0c033dab7259f7c3c27be15353dafa4'
+  - name: acceleratorCommit
+    value: '06f7ea6c2f99371900feefba11c10212b16364b4'
+
+stages:
+  # -------------------------------------------------------------------------
+  - stage: Validate
+    displayName: 'Validate'
+    jobs:
+      - job: ValidateSources
+        displayName: 'Compile, test, and lint'
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '$(pythonVersion)'
+            displayName: 'Use Python $(pythonVersion)'
+
+          - script: |
+              python -m pip install --upgrade pip
+              pip install -r scripts/requirements.txt
+            displayName: 'Install operator-workstation Python dependencies'
+
+          - script: python -m compileall scripts samples tests -q
+            displayName: 'Compile-check Python sources (python -m compileall)'
+
+          - script: |
+              pytest tests/ -v --junitxml=$(Common.TestResultsDirectory)/pytest-results.xml
+            displayName: 'Run pytest'
+
+          - task: PublishTestResults@2
+            condition: succeededOrFailed()
+            inputs:
+              testResultsFormat: 'JUnit'
+              testResultsFiles: '$(Common.TestResultsDirectory)/pytest-results.xml'
+              testRunTitle: 'validate_mcp_endpoint.py + sample MCP server'
+
+          - task: AzureCLI@2
+            displayName: 'az bicep build (publish-contract template, if present)'
+            inputs:
+              azureSubscription: '$(azureServiceConnection)'
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                set -euo pipefail
+                TEMPLATE="infra/publish-contract/mcp-gateway.bicep"
+                if [ -f "$TEMPLATE" ]; then
+                  echo "Building $TEMPLATE ..."
+                  az bicep build --file "$TEMPLATE"
+                else
+                  echo "##vso[task.logissue type=warning]$TEMPLATE not found in this checkout -- skipping az bicep build. The deployed publish-contract template lives in the pinned accelerator clone; add a local override here only if this repo carries its own copy."
+                fi
+
+          - pwsh: |
+              $scripts = @('scripts/Register-McpAdapter.ps1', 'scripts/Publish-McpAsset.ps1')
+              if (Get-Module -ListAvailable -Name PSScriptAnalyzer) {
+                Write-Host "PSScriptAnalyzer found -- linting PowerShell scripts."
+                $failed = $false
+                foreach ($s in $scripts) {
+                  $results = Invoke-ScriptAnalyzer -Path $s -Severity Warning, Error
+                  if ($results) {
+                    $results | Format-Table -AutoSize | Out-String | Write-Host
+                    $failed = $true
+                  }
+                }
+                if ($failed) {
+                  Write-Host "##vso[task.logissue type=warning]PSScriptAnalyzer reported findings above (soft check -- not failing the build)."
+                }
+              } else {
+                Write-Host "##vso[task.logissue type=warning]PSScriptAnalyzer module is not installed on this agent -- skipping PowerShell lint (soft check, not a build failure)."
+              }
+            displayName: 'Lint PowerShell scripts with PSScriptAnalyzer (soft check)'
+
+  # -------------------------------------------------------------------------
+  - stage: BuildImage
+    displayName: 'Build Sample MCP Server Image'
+    dependsOn: Validate
+    jobs:
+      - job: BuildSampleServerImage
+        displayName: 'az acr build sample MCP server'
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - task: AzureCLI@2
+            displayName: 'az acr build'
+            inputs:
+              azureSubscription: '$(azureServiceConnection)'
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                set -euo pipefail
+                az acr build \
+                  --registry "$(acrName)" \
+                  --image "$(sampleServerImageName):$(Build.BuildId)" \
+                  --image "$(sampleServerImageName):latest" \
+                  --file samples/mcp-server/Dockerfile \
+                  samples/mcp-server
+
+  # -------------------------------------------------------------------------
+  - stage: DeployGovernancePlane
+    displayName: 'Deploy Governance Plane (Citadel Governance Hub)'
+    dependsOn: BuildImage
+    jobs:
+      # NOTE: the approval gate for this stage is configured on the
+      # "secure-mcp-gateway-governance-plane" Environment resource itself
+      # (Azure DevOps project -> Pipelines -> Environments -> Approvals and
+      # checks), not expressible purely in this YAML. Create that Environment
+      # and add a manual approval check before running this pipeline for
+      # real.
+      - deployment: DeployGovernancePlane
+        displayName: 'Deploy Citadel Governance Hub (azd / Bicep)'
+        environment: 'secure-mcp-gateway-governance-plane'
+        pool:
+          vmImage: 'ubuntu-latest'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: AzureCLI@2
+                  displayName: 'azd up (Citadel Governance Hub, pinned commit)'
+                  inputs:
+                    azureSubscription: '$(azureServiceConnection)'
+                    scriptType: bash
+                    scriptLocation: inlineScript
+                    inlineScript: |
+                      set -euo pipefail
+                      # Governance plane source: Azure-Samples/ai-hub-gateway-solution-accelerator
+                      # branch citadel-v1, pinned commit
+                      # 06f7ea6c2f99371900feefba11c10212b16364b4.
+                      # $(acceleratorPath) is expected to already contain that
+                      # pinned clone (provisioned by an earlier pipeline
+                      # resource/step in a real environment, or checked out as
+                      # a pipeline repository resource).
+                      cd "$(acceleratorPath)"
+                      azd env set AZURE_TENANT_ID "$(tenantId)"
+                      azd env set AZURE_SUBSCRIPTION_ID "$(subscriptionId)"
+                      azd env set AZURE_LOCATION "$(location)"
+                      azd up --no-prompt
+
+  # -------------------------------------------------------------------------
+  - stage: DeployMcpPlane
+    displayName: 'Deploy MCP Runtime Plane (mcp-gateway on AKS)'
+    dependsOn: DeployGovernancePlane
+    jobs:
+      # NOTE: as with DeployGovernancePlane, configure the manual approval
+      # check on the "secure-mcp-gateway-mcp-plane" Environment resource in
+      # the Azure DevOps UI.
+      - deployment: DeployMcpPlane
+        displayName: 'Deploy mcp-gateway (Bicep + kubectl apply)'
+        environment: 'secure-mcp-gateway-mcp-plane'
+        pool:
+          vmImage: 'ubuntu-latest'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: AzureCLI@2
+                  displayName: 'Clone microsoft/mcp-gateway at the pinned commit'
+                  inputs:
+                    azureSubscription: '$(azureServiceConnection)'
+                    scriptType: bash
+                    scriptLocation: inlineScript
+                    inlineScript: |
+                      set -euo pipefail
+                      # The MCP runtime plane is deployed FROM THE UPSTREAM REPO,
+                      # not from this repo. This repo owns the integration seam
+                      # (publish/access contracts + policy overlay), the operator
+                      # scripts, and the reference MCP server -- deliberately NOT
+                      # a fork of the runtime's infrastructure.
+                      #
+                      # microsoft/mcp-gateway publishes NO releases and NO tags,
+                      # so the commit SHA is the only durable pin.
+                      rm -rf "$(Agent.TempDirectory)/mcp-gateway"
+                      git clone --no-checkout https://github.com/microsoft/mcp-gateway.git \
+                        "$(Agent.TempDirectory)/mcp-gateway"
+                      cd "$(Agent.TempDirectory)/mcp-gateway"
+                      git checkout "$(mcpGatewayCommit)"
+                      echo "Pinned to: $(git rev-parse HEAD)"
+
+                - task: AzureCLI@2
+                  displayName: 'Deploy AKS + mcp-gateway infra (upstream Bicep)'
+                  inputs:
+                    azureSubscription: '$(azureServiceConnection)'
+                    scriptType: bash
+                    scriptLocation: inlineScript
+                    inlineScript: |
+                      set -euo pipefail
+                      cd "$(Agent.TempDirectory)/mcp-gateway"
+                      # Upstream template. No Helm chart and no CRDs -- infra is
+                      # plain Bicep and the workloads are plain Kubernetes manifests.
+                      # Creates AKS, ACR, Cosmos DB, Application Gateway, App Insights,
+                      # and the managed identities + federated credentials.
+                      az deployment group create \
+                        --resource-group "$(mcpPlaneResourceGroup)" \
+                        --template-file deployment/infra/azure-deployment.bicep \
+                        --parameters \
+                            clientId="$(mcpClientId)" \
+                            resourceLabel="$(mcpResourceLabel)" \
+                            location="$(location)" \
+                            enablePrivateEndpoints=true
+
+                - task: AzureCLI@2
+                  displayName: 'kubectl apply mcp-gateway control plane + tool gateway'
+                  inputs:
+                    azureSubscription: '$(azureServiceConnection)'
+                    scriptType: bash
+                    scriptLocation: inlineScript
+                    inlineScript: |
+                      set -euo pipefail
+                      cd "$(Agent.TempDirectory)/mcp-gateway"
+                      az aks get-credentials \
+                        --resource-group "$(mcpPlaneResourceGroup)" \
+                        --name "$(aksClusterName)" \
+                        --overwrite-existing
+                      # Upstream manifest template. Images are
+                      # ghcr.io/microsoft/mcp-gateway:latest and
+                      # ghcr.io/microsoft/tool-gateway:latest. It also creates the
+                      # `adapter` namespace (where the gateway manages adapter
+                      # StatefulSets) and the default-deny NetworkPolicies.
+                      #
+                      # The template contains placeholders that must be substituted
+                      # for this environment before apply. GatewaySettings__Secret
+                      # MUST come from the variable group / Key Vault -- never a
+                      # default or a literal in this file.
+                      envsubst < deployment/k8s/cloud-deployment-template.yml > /tmp/mcp-gateway.yml
+                      kubectl apply -f /tmp/mcp-gateway.yml
+                      rm -f /tmp/mcp-gateway.yml
+
+                      kubectl rollout status deployment/mcpgateway --timeout=300s || true
+                      kubectl get networkpolicy -n adapter
+
+                - task: AzureCLI@2
+                  displayName: 'Gate: verify the runtime edge terminates TLS'
+                  inputs:
+                    azureSubscription: '$(azureServiceConnection)'
+                    scriptType: bash
+                    scriptLocation: inlineScript
+                    inlineScript: |
+                      set -euo pipefail
+                      # Upstream ships an HTTP-ONLY Application Gateway listener.
+                      # Publishing an http:// origin through API Management would put
+                      # every bearer token on the wire in cleartext between the two
+                      # planes, so fail the deployment here rather than later.
+                      # See docs/03-deployment.md Phase 4.
+                      LISTENERS=$(az network application-gateway http-listener list \
+                        --gateway-name "$(appGatewayName)" \
+                        --resource-group "$(mcpPlaneResourceGroup)" \
+                        --query "[].protocol" -o tsv)
+                      echo "Configured listeners: $LISTENERS"
+                      if ! echo "$LISTENERS" | grep -qi https; then
+                        echo "##vso[task.logissue type=error]No HTTPS listener found on $(appGatewayName). Complete docs/03-deployment.md Phase 4 (TLS + origin lock) before publishing this origin through API Management."
+                        exit 1
+                      fi
+
+  # -------------------------------------------------------------------------
+  - stage: PublishAsset
+    displayName: 'Publish MCP Asset Through APIM'
+    dependsOn: DeployMcpPlane
+    jobs:
+      - job: PublishMcpAsset
+        displayName: 'Run Publish-McpAsset.ps1 (Citadel Publish Contract)'
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - task: AzureCLI@2
+            displayName: 'Publish-McpAsset.ps1'
+            inputs:
+              azureSubscription: '$(azureServiceConnection)'
+              scriptType: pscore
+              scriptLocation: scriptPath
+              scriptPath: 'scripts/Publish-McpAsset.ps1'
+              # The service connection above already authenticated `az` to
+              # the correct tenant/subscription for this task, so the
+              # script's own Test-AzTenantContext check confirms rather than
+              # re-authenticates -- see the header comment in this file.
+              arguments: >
+                -TenantId "$(tenantId)"
+                -SubscriptionId "$(subscriptionId)"
+                -Location "$(location)"
+                -AcceleratorPath "$(acceleratorPath)"
+                -Confirm:$false
+
+  # -------------------------------------------------------------------------
+  - stage: SmokeTest
+    displayName: 'Smoke Test Published Endpoint'
+    dependsOn: PublishAsset
+    jobs:
+      - job: SmokeTestMcpEndpoint
+        displayName: 'Run validate_mcp_endpoint.py'
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '$(pythonVersion)'
+            displayName: 'Use Python $(pythonVersion)'
+
+          - script: |
+              python -m pip install --upgrade pip
+              pip install -r scripts/requirements.txt
+            displayName: 'Install operator-workstation Python dependencies'
+
+          - task: AzureCLI@2
+            displayName: 'validate_mcp_endpoint.py (JSON output for pipeline logs)'
+            inputs:
+              azureSubscription: '$(azureServiceConnection)'
+              scriptType: bash
+              scriptLocation: inlineScript
+              # mcpSubscriptionKey is sourced from the Key Vault-linked
+              # variable group referenced above -- never inlined here.
+              inlineScript: |
+                set -euo pipefail
+                python scripts/validate_mcp_endpoint.py \
+                  --endpoint "$(mcpGatewayBaseUrl)" \
+                  --subscription-key "$(mcpSubscriptionKey)" \
+                  --use-azure-identity \
+                  --scope "$(mcpTokenScope)" \
+                  --json

@@ -1,0 +1,163 @@
+<mxfile host="Electron" agent="draw.io" version="26.0.0">
+  <diagram id="secure-mcp-gateway-identity-flow" name="Identity &amp; Token Flow">
+    <mxGraphModel dx="2000" dy="1300" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1880" pageHeight="1342" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="&lt;b&gt;Identity &amp; Token Flow — Mode B: Caller-Token Passthrough (default)&lt;/b&gt;" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontSize=26;fontColor=#201F1E;fontFamily=Segoe UI;" vertex="1" parent="1">
+          <mxGeometry x="40" y="16" width="1820" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" value="Two independent authorization systems, two credentials, one unmodified token — entitlement and identity are separate questions answered by separate planes" style="text;html=1;align=left;verticalAlign=middle;fontSize=12;fontStyle=0;fontColor=#605E5C;whiteSpace=wrap;fontFamily=Segoe UI;" vertex="1" parent="1">
+          <mxGeometry x="40" y="50" width="1820" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="lane_client" value="MCP client" style="shape=label;rounded=0;imageWidth=32;imageHeight=32;imageAlign=left;imageVerticalAlign=middle;spacingLeft=44;spacingRight=6;iconKey=dev-console;whiteSpace=wrap;html=1;fillColor=#FCE4EC;strokeColor=#A4262C;verticalAlign=middle;fontStyle=1;fontSize=12;fontColor=#A4262C;strokeWidth=2;fontFamily=Segoe UI;image=data:image/svg+xml,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDE4IDE4Ij48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImJmOTQzMGM1LTE2MTQtNGIyMi04MDg2LTdjY2MyNTAwOGY5ZSIgeDE9IjkiIHkxPSIxNS44MzQiIHgyPSI5IiB5Mj0iNS43ODgiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMzMmJlZGQiIC8+PHN0b3Agb2Zmc2V0PSIwLjE3NSIgc3RvcC1jb2xvcj0iIzMyY2FlYSIgLz48c3RvcCBvZmZzZXQ9IjAuNDEiIHN0b3AtY29sb3I9IiMzMmQyZjIiIC8+PHN0b3Agb2Zmc2V0PSIwLjc3NSIgc3RvcC1jb2xvcj0iIzMyZDRmNSIgLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48dGl0bGU+TXNQb3J0YWxGeC5iYXNlLmltYWdlcy0zODwvdGl0bGU+PGcgaWQ9ImI5NmEzMzE4LWY1NjktNDA2NC04NmIyLTAwNTY2NmIzZmY0ZiI+PGc+PHBhdGggZD0iTS41LDUuNzg4aDE3YTAsMCwwLDAsMSwwLDB2OS40NzhhLjU2OC41NjgsMCwwLDEtLjU2OC41NjhIMS4wNjhBLjU2OC41NjgsMCwwLDEsLjUsMTUuMjY2VjUuNzg4QTAsMCwwLDAsMSwuNSw1Ljc4OFoiIGZpbGw9InVybCgjYmY5NDMwYzUtMTYxNC00YjIyLTgwODYtN2NjYzI1MDA4ZjllKSIgLz48cGF0aCBkPSJNMS4wNzEsMi4xNjZIMTYuOTI5YS41NjguNTY4LDAsMCwxLC41NjguNTY4VjUuNzg4YTAsMCwwLDAsMSwwLDBILjVhMCwwLDAsMCwxLDAsMFYyLjczNEEuNTY4LjU2OCwwLDAsMSwxLjA3MSwyLjE2NloiIGZpbGw9IiMwMDc4ZDQiIC8+PHBhdGggZD0iTTQuMjkyLDcuMTUzaC41MjNhLjE2Ny4xNjcsMCwwLDEsLjE2Ny4xNjd2My44NThhLjMzNS4zMzUsMCwwLDEtLjMzNS4zMzVINC4xMjVhMCwwLDAsMCwxLDAsMFY3LjMyMUEuMTY3LjE2NywwLDAsMSw0LjI5Miw3LjE1M1oiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC01LjI3MSA1Ljk2Nykgcm90YXRlKC00NS4wODEpIiBmaWxsPSIjZjJmMmYyIiAvPjxwYXRoIGQ9Ik00LjMyLDkuNjQ3aC41MjNhLjE2Ny4xNjcsMCwwLDEsLjE2Ny4xNjd2NC4xMzFhMCwwLDAsMCwxLDAsMEg0LjQ4OGEuMzM1LjMzNSwwLDAsMS0uMzM1LS4zMzV2LTMuOEEuMTY3LjE2NywwLDAsMSw0LjMyLDkuNjQ3WiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTAuNTA0IDIzLjM4NSkgcm90YXRlKC0xMzUuMDgxKSIgZmlsbD0iI2U2ZTZlNiIgLz48cmVjdCB4PSI3LjIyMSIgeT0iMTIuNjQiIHdpZHRoPSI0Ljc3MSIgaGVpZ2h0PSIxLjAxMSIgcng9IjAuMjkxIiBmaWxsPSIjZjJmMmYyIiAvPjwvZz48L2c+PC9zdmc+;" vertex="1" parent="1">
+          <mxGeometry x="60" y="100" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="lane_entra" value="Microsoft Entra ID" style="shape=label;rounded=0;imageWidth=32;imageHeight=32;imageAlign=left;imageVerticalAlign=middle;spacingLeft=44;spacingRight=6;iconKey=entra-id;whiteSpace=wrap;html=1;fillColor=#F3EFF9;strokeColor=#5C2D91;verticalAlign=middle;fontStyle=1;fontSize=12;fontColor=#5C2D91;strokeWidth=2;fontFamily=Segoe UI;image=data:image/svg+xml,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0idXVpZC1mOGQ0ZDM5Mi03YzEyLTRiZDktYmFmZi02NmZiZjc4MTRiOTEiIGRhdGEtbmFtZT0iTGF5ZXIgMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCI+CiAgPHBhdGggZD0ibTMuODAyLDE0LjAzMmMuMzg4LjI0MiwxLjAzMy41MTEsMS43MTUuNTExLjYyMSwwLDEuMTk4LS4xOCwxLjY3Ni0uNDg3LDAsMCwuMDAxLDAsLjAwMi0uMDAxbDEuODA1LTEuMTI4djQuMDczYy0uMjg2LDAtLjU3NC0uMDc4LS44MjQtLjIzNGwtNC4zNzQtMi43MzRaIiBmaWxsPSIjMjI1MDg2Ii8+CiAgPHBhdGggZD0ibTcuODUzLDEuNTA3TC4zNTMsOS45NjdjLS41NzkuNjU0LS40MjgsMS42NDIuMzIzLDIuMTExLDAsMCwyLjc3NiwxLjczNSwzLjEyNiwxLjk1NC4zODguMjQyLDEuMDMzLjUxMSwxLjcxNS41MTEuNjIxLDAsMS4xOTgtLjE4LDEuNjc2LS40ODcsMCwwLC4wMDEsMCwuMDAyLS4wMDFsMS44MDUtMS4xMjgtNC4zNjQtMi43MjgsNC4zNjUtNC45MjRWMXMwLDAsMCwwYy0uNDI0LDAtLjg0Ny4xNjktMS4xNDcuNTA3WiIgZmlsbD0iIzZkZiIvPgogIDxwb2x5Z29uIHBvaW50cz0iNC42MzYgMTAuMTk5IDQuNjg4IDEwLjIzMSA5IDEyLjkyNyA5LjAwMSAxMi45MjcgOS4wMDEgMTIuOTI3IDkuMDAxIDUuMjc2IDkgNS4yNzUgNC42MzYgMTAuMTk5IiBmaWxsPSIjY2JmOGZmIi8+CiAgPHBhdGggZD0ibTE3LjMyNCwxMi4wNzhjLjc1MS0uNDY5LjkwMi0xLjQ1Ny4zMjMtMi4xMTFsLTQuOTIxLTUuNTUxYy0uMzk3LS4xODUtLjg0Mi0uMjkxLTEuMzEzLS4yOTEtLjkyNSwwLTEuNzUyLjM5OS0yLjMwMiwxLjAyNmwtLjEwOS4xMjNoMHM0LjM2NCw0LjkyNCw0LjM2NCw0LjkyNGgwczAsMCwwLDBsLTQuMzY1LDIuNzI4djQuMDczYy4yODcsMCwuNTczLS4wNzguODIzLS4yMzRsNy41LTQuNjg4WiIgZmlsbD0iIzA3NDc5MyIvPgogIDxwYXRoIGQ9Im05LjAwMSwxdjQuMjc1cy4xMDktLjEyMy4xMDktLjEyM2MuNTUtLjYyNywxLjM3Ny0xLjAyNiwyLjMwMi0xLjAyNi40NzIsMCwuOTE2LjEwNywxLjMxMy4yOTFsLTIuNTc5LTIuOTA5Yy0uMjk5LS4zMzgtLjcyMy0uNTA3LTEuMTQ2LS41MDdaIiBmaWxsPSIjMDI5NGU0Ii8+CiAgPHBvbHlnb24gcG9pbnRzPSIxMy4zNjUgMTAuMTk5IDEzLjM2NSAxMC4xOTkgMTMuMzY1IDEwLjE5OSA5LjAwMSA1LjI3NiA5LjAwMSAxMi45MjYgMTMuMzY1IDEwLjE5OSIgZmlsbD0iIzk2YmNjMiIvPgo8L3N2Zz4=;" vertex="1" parent="1">
+          <mxGeometry x="300" y="100" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="lane_apim" value="API Management&#10;(governance edge)" style="shape=label;rounded=0;imageWidth=32;imageHeight=32;imageAlign=left;imageVerticalAlign=middle;spacingLeft=44;spacingRight=6;iconKey=api-management;whiteSpace=wrap;html=1;fillColor=#DEECF9;strokeColor=#0078D4;verticalAlign=middle;fontStyle=1;fontSize=12;fontColor=#0078D4;strokeWidth=2;fontFamily=Segoe UI;image=data:image/svg+xml,PHN2ZyBpZD0iZjc4ZWYzN2ItZmRlNC00NjFjLTk0ZTItZGNjZmYzMmRkNWQ3IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDE4IDE4Ij48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImJmOGE5NTgzLWFhZTktNDhmZi04N2Q4LWZiOGY0NGU3ZDZiZCIgeDE9IjkiIHkxPSIxNi44MiIgeDI9IjkiIHkyPSIxLjE4IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMTk4YWIzIiAvPjxzdG9wIG9mZnNldD0iMC4wOSIgc3RvcC1jb2xvcj0iIzFmOWRjNCIgLz48c3RvcCBvZmZzZXQ9IjAuMjQiIHN0b3AtY29sb3I9IiMyOGI1ZDkiIC8+PHN0b3Agb2Zmc2V0PSIwLjQiIHN0b3AtY29sb3I9IiMyZGM2ZTkiIC8+PHN0b3Agb2Zmc2V0PSIwLjU3IiBzdG9wLWNvbG9yPSIjMzFkMWYyIiAvPjxzdG9wIG9mZnNldD0iMC43OCIgc3RvcC1jb2xvcj0iIzMyZDRmNSIgLz48L2xpbmVhckdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCBpZD0iZjliMWJiOGMtNzI4ZS00YWJmLWJjZTUtNmMxMWFjMTcwYzViIiB4MT0iOC4zNiIgeTE9IjExLjM1IiB4Mj0iOC4zNiIgeTI9IjE0LjQ2IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYzY5YWViIiAvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzZmNGJiMiIgLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48dGl0bGU+SWNvbi13ZWItNDI8L3RpdGxlPjxwYXRoIGQ9Ik0xNC4xOCw1Ljg5QTQuODUsNC44NSwwLDAsMCw5LjIzLDEuMTgsNSw1LDAsMCwwLDQuNDgsNC40Nyw0LjYxLDQuNjEsMCwwLDAsLjUsOSw0LjY3LDQuNjcsMCwwLDAsNS4yOSwxMy41YTMsMywwLDAsMCwuNDIsMGgxLjJhMS40NywxLjQ3LDAsMCwxLS4xMS0uNTZ2MEExLjUxLDEuNTEsMCwwLDEsNywxMi4yMUg1LjZsLS4zMSwwQTMuNDEsMy40MSwwLDAsMSwxLjc3LDksMy4zMywzLjMzLDAsMCwxLDQuNjgsNS43M2wuNzYtLjEyLjI1LS43M0EzLjczLDMuNzMsMCwwLDEsOS4yMywyLjQ1LDMuNiwzLjYsMCwwLDEsMTIuOTEsNS45VjdMMTQsNy4xNWEyLjU5LDIuNTksMCwwLDEsMi4yNiwyLjQ5LDIuNjMsMi42MywwLDAsMS0yLjYyLDIuNTRoLS4xNWwtLjA4LDBoLTFBMy45MiwzLjkyLDAsMCwwLDguNTQsOWEuNjQuNjQsMCwxLDAsMCwxLjI3LDIuNjUsMi42NSwwLDAsMSwwLDUuMjkuNjQuNjQsMCwxLDAsMCwxLjI3LDMuOTIsMy45MiwwLDAsMCwzLjg3LTMuMzRoMS4wNWEuNjQuNjQsMCwwLDAsLjIsMEEzLjkxLDMuOTEsMCwwLDAsMTcuNSw5LjY0LDMuODYsMy44NiwwLDAsMCwxNC4xOCw1Ljg5WiIgZmlsbD0idXJsKCNiZjhhOTU4My1hYWU5LTQ4ZmYtODdkOC1mYjhmNDRlN2Q2YmQpIiAvPjxyZWN0IHg9IjYuOCIgeT0iMTEuMzUiIHdpZHRoPSIzLjEyIiBoZWlnaHQ9IjMuMTIiIHJ4PSIxLjU0IiBmaWxsPSJ1cmwoI2Y5YjFiYjhjLTcyOGUtNGFiZi1iY2U1LTZjMTFhYzE3MGM1YikiIC8+PC9zdmc+;" vertex="1" parent="1">
+          <mxGeometry x="540" y="100" width="220" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="lane_mgw" value="MCP Gateway&#10;(runtime)" style="shape=label;rounded=0;imageWidth=32;imageHeight=32;imageAlign=left;imageVerticalAlign=middle;spacingLeft=44;spacingRight=6;iconKey=aks;whiteSpace=wrap;html=1;fillColor=#DFF6DD;strokeColor=#107C10;verticalAlign=middle;fontStyle=1;fontSize=12;fontColor=#107C10;strokeWidth=2;fontFamily=Segoe UI;image=data:image/svg+xml,PHN2ZyBpZD0iYWY2YTJjNDItYmQ0OC00ODU3LWE0NzktYWVjZjhiM2RlNGY2IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDE4IDE4Ij48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImI3MGM5Y2YxLWJhYjgtNDdlMC1iYmRiLWNlMWNkNjY0ZDI2OCIgeDE9IjIuOTQiIHkxPSIzLjc0IiB4Mj0iOC42NyIgeTI9IjMuNzQiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNiNzdhZjQiIC8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjNzczYWRjIiAvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJiZWI2OTk1My1iZDk2LTQ1MTUtODg0My1hYzEyNTQ2YWY5MzYiIHgxPSI5LjEzIiB5MT0iMy43OSIgeDI9IjE0Ljg1IiB5Mj0iMy43OSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2I3N2FmNCIgLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM3NzNhZGMiIC8+PC9saW5lYXJHcmFkaWVudD48bGluZWFyR3JhZGllbnQgaWQ9ImEzOWM3NmU4LTU0N2UtNGViNC1iYzI1LWQ4MWMwZjhjZGE2MiIgeDE9IjAuMDEiIHkxPSI5LjEyIiB4Mj0iNS43MyIgeTI9IjkuMTIiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNiNzdhZjQiIC8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjNzczYWRjIiAvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJmMGEyYTQ5MS0xN2RjLTRiYjgtYmJmYy1lZTU4YTVjZjQ3ZGEiIHgxPSI2LjE4IiB5MT0iOS4wOCIgeDI9IjExLjkiIHkyPSI5LjA4IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYjc3YWY0IiAvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzc3M2FkYyIgLz48L2xpbmVhckdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCBpZD0iZWZjNmE1NmQtODU4NS00MTdkLTkzMWEtMWRhYzIxMTRjY2QwIiB4MT0iMTIuMzUiIHkxPSI5LjEzIiB4Mj0iMTguMDgiIHkyPSI5LjEzIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYjc3YWY0IiAvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzc3M2FkYyIgLz48L2xpbmVhckdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCBpZD0iZTM5OWFhOTMtMzQxZi00ZGYyLTljMDItNjAzYjgyYjQ4NGMyIiB4MT0iMi44NyIgeTE9IjE0LjU2IiB4Mj0iOC42IiB5Mj0iMTQuNTYiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNiNzdhZjQiIC8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjNzczYWRjIiAvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJhMTUyYmJhMC1iYTJiLTQ4M2EtYjhjMS0wYWU3ZGUzNTU5OTAiIHgxPSI5LjA1IiB5MT0iMTQuNiIgeDI9IjE0Ljc4IiB5Mj0iMTQuNiIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2I3N2FmNCIgLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM3NzNhZGMiIC8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHRpdGxlPkljb24tY29tcHV0ZS0yMzwvdGl0bGU+PHBvbHlnb24gcG9pbnRzPSI1LjggMS4yMiAyLjk0IDEuNzUgMi45NCA1LjY1IDUuOCA2LjI2IDguNjcgNS4xMSA4LjY3IDIuMiA1LjggMS4yMiIgZmlsbD0idXJsKCNiNzBjOWNmMS1iYWI4LTQ3ZTAtYmJkYi1jZTFjZDY2NGQyNjgpIiAvPjxwYXRoIGQ9Ik01LjkxLDYuMiw4LjUzLDUuMTRBLjIuMiwwLDAsMCw4LjY1LDVWMi4zNmEuMjEuMjEsMCwwLDAtLjEzLS4xOGwtMi42NS0uOUg1Ljc1bC0yLjYuNDhBLjIuMiwwLDAsMCwzLDEuOTRWNS40N2EuMTkuMTksMCwwLDAsLjE1LjE5bDIuNjMuNTVBLjMyLjMyLDAsMCwwLDUuOTEsNi4yWiIgZmlsbD0ibm9uZSIgLz48cGF0aCBkPSJNMi45NCwxLjc1djMuOWwyLjg5LjYxdi01Wm0xLjIyLDMuNi0uODEtLjE2di0zbC44MS0uMTNabTEuMjYuMjMtLjkzLS4xNVYybC45My0uMTZaIiBmaWxsPSIjMzQxYTZlIiAvPjxwb2x5Z29uIHBvaW50cz0iMTEuOTkgMS4yNyA5LjEzIDEuOCA5LjEzIDUuNyAxMS45OSA2LjMxIDE0Ljg1IDUuMTUgMTQuODUgMi4yNSAxMS45OSAxLjI3IiBmaWxsPSJ1cmwoI2JlYjY5OTUzLWJkOTYtNDUxNS04ODQzLWFjMTI1NDZhZjkzNikiIC8+PHBhdGggZD0iTTkuMTMsMS44VjUuN0wxMiw2LjMxdi01Wm0xLjIxLDMuNi0uODEtLjE2di0zbC44MS0uMTNabTEuMjYuMjMtLjkzLS4xNVYyLjA1bC45My0uMTdaIiBmaWxsPSIjMzQxYTZlIiAvPjxwb2x5Z29uIHBvaW50cz0iMi44NyA2LjYgMC4wMSA3LjEzIDAuMDEgMTEuMDMgMi44NyAxMS42NCA1Ljc0IDEwLjQ5IDUuNzQgNy41OCAyLjg3IDYuNiIgZmlsbD0idXJsKCNhMzljNzZlOC01NDdlLTRlYjQtYmMyNS1kODFjMGY4Y2RhNjIpIiAvPjxwYXRoIGQ9Ik0wLDcuMTNWMTFsMi44OS42MXYtNVptMS4yMSwzLjYxLS44MS0uMTd2LTNsLjgxLS4xNFpNMi40OCwxMWwtLjkzLS4xNVY3LjM4bC45My0uMTZaIiBmaWxsPSIjMzQxYTZlIiAvPjxwb2x5Z29uIHBvaW50cz0iOS4wNCA2LjU2IDYuMTggNy4wOSA2LjE4IDEwLjk5IDkuMDQgMTEuNjEgMTEuOSAxMC40NSAxMS45IDcuNTQgOS4wNCA2LjU2IiBmaWxsPSJ1cmwoI2YwYTJhNDkxLTE3ZGMtNGJiOC1iYmZjLWVlNThhNWNmNDdkYSkiIC8+PHBhdGggZD0iTTYuMTgsNy4wOVYxMWwyLjg4LjYxdi01Wk03LjM5LDEwLjdsLS44MS0uMTd2LTNsLjgxLS4xNFptMS4yNi4yMi0uOTMtLjE1VjcuMzRsLjkzLS4xNloiIGZpbGw9IiMzNDFhNmUiIC8+PHBvbHlnb24gcG9pbnRzPSIxNS4yMSA2LjYxIDEyLjM1IDcuMTQgMTIuMzUgMTEuMDQgMTUuMjEgMTEuNjUgMTguMDggMTAuNSAxOC4wOCA3LjU5IDE1LjIxIDYuNjEiIGZpbGw9InVybCgjZWZjNmE1NmQtODU4NS00MTdkLTkzMWEtMWRhYzIxMTRjY2QwKSIgLz48cGF0aCBkPSJNMTIuMzUsNy4xNFYxMWwyLjg5LjYxdi01Wm0xLjIyLDMuNjEtLjgxLS4xN3YtM2wuODEtLjE0Wm0xLjI2LjIyLS45My0uMTVWNy4zOWwuOTMtLjE2WiIgZmlsbD0iIzM0MWE2ZSIgLz48cG9seWdvbiBwb2ludHM9IjUuNzMgMTIuMDQgMi44NyAxMi41NiAyLjg3IDE2LjQ2IDUuNzMgMTcuMDggOC42IDE1LjkyIDguNiAxMy4wMiA1LjczIDEyLjA0IiBmaWxsPSJ1cmwoI2UzOTlhYTkzLTM0MWYtNGRmMi05YzAyLTYwM2I4MmI0ODRjMikiIC8+PHBhdGggZD0iTTUuODQsMTcsOC40NSwxNmEuMTguMTgsMCwwLDAsLjEyLS4xOHYtMi42QS4yLjIsMCwwLDAsOC40NCwxM0w1LjgsMTIuMWEuMTcuMTcsMCwwLDAtLjEyLDBsLTIuNi40N2EuMTkuMTksMCwwLDAtLjE2LjE5djMuNTRhLjE5LjE5LDAsMCwwLC4xNS4xOUw1LjcsMTdBLjIzLjIzLDAsMCwwLDUuODQsMTdaIiBmaWxsPSJub25lIiAvPjxwYXRoIGQ9Ik0yLjg3LDEyLjU2djMuOWwyLjg5LjYyVjEyWm0xLjIyLDMuNjFMMy4yOCwxNlYxM2wuODEtLjE0Wm0xLjI2LjIzLS45My0uMTVWMTIuODFsLjkzLS4xNloiIGZpbGw9IiMzNDFhNmUiIC8+PHBvbHlnb24gcG9pbnRzPSIxMS45MSAxMi4wOCA5LjA1IDEyLjYxIDkuMDUgMTYuNTEgMTEuOTEgMTcuMTIgMTQuNzggMTUuOTcgMTQuNzggMTMuMDYgMTEuOTEgMTIuMDgiIGZpbGw9InVybCgjYTE1MmJiYTAtYmEyYi00ODNhLWI4YzEtMGFlN2RlMzU1OTkwKSIgLz48cGF0aCBkPSJNOS4wNSwxMi42MXYzLjlsMi44OS42MXYtNVptMS4yMiwzLjYxLS44MS0uMTd2LTNsLjgxLS4xNFptMS4yNi4yMi0uOTMtLjE1VjEyLjg2bC45My0uMTZaIiBmaWxsPSIjMzQxYTZlIiAvPjwvc3ZnPg==;" vertex="1" parent="1">
+          <mxGeometry x="800" y="100" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="lane_pod" value="MCP server pod" style="shape=label;rounded=0;imageWidth=32;imageHeight=32;imageAlign=left;imageVerticalAlign=middle;spacingLeft=44;spacingRight=6;iconKey=code;whiteSpace=wrap;html=1;fillColor=#F3F9F1;strokeColor=#107C10;verticalAlign=middle;fontStyle=1;fontSize=12;fontColor=#107C10;strokeWidth=2;fontFamily=Segoe UI;image=data:image/svg+xml,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDE4IDE4Ij48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImI2Mzk3ZDJlLTNiYTEtNDgyNC04MjllLTk5NzhhNTMzNTA3MiIgeDE9IjkiIHkxPSIxNS44MzQiIHgyPSI5IiB5Mj0iNS43ODgiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMwMDc4ZDQiIC8+PHN0b3Agb2Zmc2V0PSIwLjUwMiIgc3RvcC1jb2xvcj0iIzQwOTNlNiIgLz48c3RvcCBvZmZzZXQ9IjAuNzc1IiBzdG9wLWNvbG9yPSIjNWVhMGVmIiAvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJiMDU0YTIxMy0yYjk1LTQ3NzMtYmQ4ZC01ODMzYzAyMWE3ODMiIHgxPSIzLjc1NCIgeTE9IjExLjYxNCIgeDI9IjYuOTc1IiB5Mj0iMTEuNjE0IiBncmFkaWVudFRyYW5zZm9ybT0idHJhbnNsYXRlKDkuNzggLTAuMzY1KSByb3RhdGUoNDQuOTE5KSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iIzVlYTBlZiIgLz48c3RvcCBvZmZzZXQ9IjAuMzcyIiBzdG9wLWNvbG9yPSIjOWZjNmY1IiAvPjxzdG9wIG9mZnNldD0iMC44IiBzdG9wLWNvbG9yPSIjZTRlZmZjIiAvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2ZmZiIgLz48L2xpbmVhckdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCBpZD0iYWU4MDgyZWItODQzOS00NWM2LWFkMzEtMjYzMGVjNTk3YmEzIiB4MT0iMTAuODMiIHkxPSIxMS42MTQiIHgyPSIxNC4wNSIgeTI9IjExLjYxNCIgZ3JhZGllbnRUcmFuc2Zvcm09InRyYW5zbGF0ZSgyOS41MjggMTEuMDg2KSByb3RhdGUoMTM1LjA4MSkiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNmZmYiIC8+PHN0b3Agb2Zmc2V0PSIwLjIiIHN0b3AtY29sb3I9IiNlNGVmZmMiIC8+PHN0b3Agb2Zmc2V0PSIwLjYyOCIgc3RvcC1jb2xvcj0iIzlmYzZmNSIgLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM1ZWEwZWYiIC8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHRpdGxlPk1zUG9ydGFsRnguYmFzZS5pbWFnZXMtMjc8L3RpdGxlPjxnIGlkPSJhYjA3ZTNjMS0zNzRjLTRjNmItYmUwMS0xZGJmMzg4ZWJkOWYiPjxnPjxwYXRoIGQ9Ik0uNSw1Ljc4OGgxN2EwLDAsMCwwLDEsMCwwdjkuNDc4YS41NjguNTY4LDAsMCwxLS41NjguNTY4SDEuMDY4QS41NjguNTY4LDAsMCwxLC41LDE1LjI2NlY1Ljc4OEEwLDAsMCwwLDEsLjUsNS43ODhaIiBmaWxsPSJ1cmwoI2I2Mzk3ZDJlLTNiYTEtNDgyNC04MjllLTk5NzhhNTMzNTA3MikiIC8+PHBhdGggZD0iTTEuMDcxLDIuMTY2SDE2LjkyOWEuNTY4LjU2OCwwLDAsMSwuNTY4LjU2OFY1Ljc4OGEwLDAsMCwwLDEsMCwwSC41YTAsMCwwLDAsMSwwLDBWMi43MzRBLjU2OC41NjgsMCwwLDEsMS4wNzEsMi4xNjZaIiBmaWxsPSIjMDA3OGQ0IiAvPjxwYXRoIGQ9Ik01LjI0NCw5LjYzMmguNDlhMCwwLDAsMCwxLDAsMFYxMy41YS4xNTcuMTU3LDAsMCwxLS4xNTcuMTU3aC0uNDlBLjE1Ny4xNTcsMCwwLDEsNC45MywxMy41VjkuOTQ1YS4zMTQuMzE0LDAsMCwxLC4zMTQtLjMxNFoiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC02LjY2NyA3LjE2NSkgcm90YXRlKC00NC45MTkpIiBmaWxsPSJ1cmwoI2IwNTRhMjEzLTJiOTUtNDc3My1iZDhkLTU4MzNjMDIxYTc4MykiIC8+PHBhdGggZD0iTTQuOTUxLDcuM2guNDlhLjMxNC4zMTQsMCwwLDEsLjMxNC4zMTR2My42MTdhLjE1Ny4xNTcsMCwwLDEtLjE1Ny4xNTdoLS40OWEuMTU3LjE1NywwLDAsMS0uMTU3LS4xNTdWNy4zYTAsMCwwLDAsMSwwLDBaIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgyLjUxNiAxOS43MzQpIHJvdGF0ZSgtMTM0LjkxOSkiIGZpbGw9IiNmMmYyZjIiIC8+PHBhdGggZD0iTTEyLjIyOCw5LjYzMmguNDlhLjE1Ny4xNTcsMCwwLDEsLjE1Ny4xNTd2My44NzNhMCwwLDAsMCwxLDAsMGgtLjQ5YS4zMTQuMzE0LDAsMCwxLS4zMTQtLjMxNFY5Ljc4OGEuMTU3LjE1NywwLDAsMSwuMTU3LS4xNTdaIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxMy4wODEgMjguNzAxKSByb3RhdGUoLTEzNS4wODEpIiBmaWxsPSJ1cmwoI2FlODA4MmViLTg0MzktNDVjNi1hZDMxLTI2MzBlYzU5N2JhMykiIC8+PHBhdGggZD0iTTEyLjIsNy4zaC40OWEuMTU3LjE1NywwLDAsMSwuMTU3LjE1N3YzLjYxN2EuMzE0LjMxNCwwLDAsMS0uMzE0LjMxNGgtLjQ5YTAsMCwwLDAsMSwwLDBWNy40NkEuMTU3LjE1NywwLDAsMSwxMi4yLDcuM1oiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0yLjk2IDExLjU2Mikgcm90YXRlKC00NS4wODEpIiBmaWxsPSIjZjJmMmYyIiAvPjxyZWN0IHg9IjguNTQ3IiB5PSI2LjU5OCIgd2lkdGg9IjAuODA2IiBoZWlnaHQ9IjcuNjM0IiByeD0iMC4xMTIiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDMuNjAyIC0yLjIzMykgcm90YXRlKDE3Ljc1MikiIGZpbGw9IiNmMmYyZjIiIC8+PC9nPjwvZz48L3N2Zz4=;" vertex="1" parent="1">
+          <mxGeometry x="1040" y="100" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ll1" style="endArrow=none;html=1;strokeColor=#A4262C;strokeWidth=1;dashed=1" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="160" y="150" as="sourcePoint" />
+            <mxPoint x="160" y="1010" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ll2" style="endArrow=none;html=1;strokeColor=#5C2D91;strokeWidth=1;dashed=1" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="400" y="150" as="sourcePoint" />
+            <mxPoint x="400" y="1010" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ll3" style="endArrow=none;html=1;strokeColor=#0078D4;strokeWidth=1;dashed=1" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="650" y="150" as="sourcePoint" />
+            <mxPoint x="650" y="1010" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ll4" style="endArrow=none;html=1;strokeColor=#107C10;strokeWidth=1;dashed=1" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="900" y="150" as="sourcePoint" />
+            <mxPoint x="900" y="1010" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ll5" style="endArrow=none;html=1;strokeColor=#107C10;strokeWidth=1;dashed=1" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1140" y="150" as="sourcePoint" />
+            <mxPoint x="1140" y="1010" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s1" value="1  Acquire token for audience  api://&amp;lt;CLIENT_ID&amp;gt;" style="endArrow=classic;html=1;strokeColor=#5C2D91;strokeWidth=2;fontSize=11;verticalAlign=bottom;align=center" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="160" y="200" as="sourcePoint" />
+            <mxPoint x="400" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s1b" value="Bearer token issued  (aud = api://&amp;lt;CLIENT_ID&amp;gt;)" style="endArrow=classic;html=1;strokeColor=#5C2D91;strokeWidth=2;dashed=1;fontSize=11;verticalAlign=bottom;align=center" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="400" y="245" as="sourcePoint" />
+            <mxPoint x="160" y="245" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s2" value="2  Call published endpoint with BOTH credentials&#10;api-key: &amp;lt;subscription key&amp;gt;   +   Authorization: Bearer &amp;lt;token&amp;gt;" style="endArrow=classic;html=1;strokeColor=#A4262C;strokeWidth=3;fontSize=11;verticalAlign=bottom;align=center;fontStyle=1" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="160" y="320" as="sourcePoint" />
+            <mxPoint x="650" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s3" value="3  security-handler → validate subscription key&#10;mcp-usage → emit inbound metric&#10;evaluate quota + rate limit" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DEECF9;strokeColor=#0078D4;fontSize=10;fontColor=#323130;align=left;verticalAlign=top;arcSize=8;strokeWidth=2;spacing=6;fontFamily=Segoe UI;" vertex="1" parent="1">
+          <mxGeometry x="530" y="350" width="250" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="s4box" value="4  CRUX OF THE DESIGN&#10;backend authType = none&#10;→ API Management injects NO credential&#10;→ the caller's Authorization header is FORWARDED UNMODIFIED" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF4CE;strokeColor=#B7791F;fontSize=11;fontColor=#323130;align=left;verticalAlign=top;arcSize=8;strokeWidth=3;fontStyle=1;spacing=8;fontFamily=Segoe UI;" vertex="1" parent="1">
+          <mxGeometry x="440" y="440" width="430" height="86" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" value="4  Forward — token intact" style="endArrow=classic;html=1;strokeColor=#B7791F;strokeWidth=4;fontSize=11;verticalAlign=bottom;align=center;fontStyle=1" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="650" y="560" as="sourcePoint" />
+            <mxPoint x="900" y="560" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s5" value="5  Validate the SAME token" style="endArrow=classic;html=1;strokeColor=#5C2D91;strokeWidth=2;fontSize=11;verticalAlign=bottom;align=center" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="900" y="620" as="sourcePoint" />
+            <mxPoint x="400" y="620" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s5b" value="Claims — the REAL end-user principal" style="endArrow=classic;html=1;strokeColor=#5C2D91;strokeWidth=2;dashed=1;fontSize=11;verticalAlign=bottom;align=center" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="400" y="665" as="sourcePoint" />
+            <mxPoint x="900" y="665" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s6" value="6  Resource RBAC:  mcp.admin / mcp.engineer&#10;Scope session to (principal, adapter, session id)&#10;→ session id cannot be replayed by another caller" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DFF6DD;strokeColor=#107C10;fontSize=10;fontColor=#323130;align=left;verticalAlign=top;arcSize=8;strokeWidth=2;spacing=6;fontFamily=Segoe UI;" vertex="1" parent="1">
+          <mxGeometry x="790" y="690" width="330" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="s7" value="7  Forward as  X-Mcp-UserId / X-Mcp-Roles" style="endArrow=classic;html=1;strokeColor=#107C10;strokeWidth=3;fontSize=11;verticalAlign=bottom;align=center" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="900" y="800" as="sourcePoint" />
+            <mxPoint x="1140" y="800" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s7note" value="Client-supplied X-Mcp-* headers are STRIPPED first — identity cannot be forged.&#10;The raw Authorization header is NOT forwarded to the pod (blast-radius reduction).&#10;An internal shared secret gates gateway → tool-router trust — set it to a strong random value." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#107C10;fontSize=10;fontColor=#323130;align=left;verticalAlign=top;arcSize=6;strokeWidth=2;spacing=6;fontFamily=Segoe UI;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="770" width="560" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="s8" value="8  Response streams back over SSE — NEVER buffered" style="endArrow=classic;html=1;strokeColor=#A4262C;strokeWidth=3;dashed=1;fontSize=11;verticalAlign=bottom;align=center;fontStyle=1" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1140" y="900" as="sourcePoint" />
+            <mxPoint x="160" y="900" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s8note" value="Any policy that reads the response body buffers the stream and breaks MCP.&#10;This is why all policy is INBOUND ONLY, and why response-side PII de-anonymization&#10;and response content safety are architecturally impossible at the gateway." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FDE7E9;strokeColor=#A4262C;fontSize=10;fontColor=#A4262C;align=left;verticalAlign=top;arcSize=6;strokeWidth=2;spacing=6;fontStyle=1;fontFamily=Segoe UI;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="880" width="560" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="creds" value="TWO CREDENTIALS, TWO QUESTIONS&#10;&#10;api-key  →  WHICH BUSINESS UNIT?  WHAT QUOTA?&#10;         Answered by API Management (Access Contract product + subscription)&#10;         The subscription key alone authenticates at the gateway, then FAILS at the runtime.&#10;&#10;Authorization: Bearer  →  WHICH PRINCIPAL?  WHAT MAY THEY REACH?&#10;         Answered by the MCP runtime (Entra claims + resource RBAC)&#10;         The bearer token alone is REJECTED at the gateway.&#10;&#10;Both are required by design. Neither plane trusts the other's decision." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#323130;fontSize=12;fontColor=#323130;align=left;verticalAlign=top;arcSize=8;strokeWidth=3;spacing=10;fontFamily=Segoe UI;" vertex="1" parent="1">
+          <mxGeometry x="60" y="1040" width="820" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="modes_hdr" value="THE THREE IDENTITY MODES" style="text;html=1;align=left;verticalAlign=middle;fontSize=14;fontStyle=1;fontColor=#323130;fontFamily=Segoe UI;" vertex="1" parent="1">
+          <mxGeometry x="920" y="1040" width="400" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="mode_a" value="A — Managed identity&#10;backend authType: managed-identity&#10;&#10;Runtime sees API Management's service principal.&#10;Runtime RBAC collapses to one caller.&#10;Audit shows one principal, forever.&#10;&#10;CORRECT for machine workloads with no user context." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#605E5C;fontSize=10;fontColor=#323130;align=left;verticalAlign=top;arcSize=8;strokeWidth=2;spacing=8;fontFamily=Segoe UI;" vertex="1" parent="1">
+          <mxGeometry x="920" y="1076" width="300" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="mode_b" value="B — Caller-token passthrough   ★ DEFAULT&#10;backend authType: none&#10;&#10;Runtime sees the REAL end user or workload.&#10;Runtime RBAC fully preserved.&#10;Per-principal session scoping is meaningful.&#10;&#10;Requires token audience api://&amp;lt;CLIENT_ID&amp;gt;." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF4CE;strokeColor=#B7791F;fontSize=10;fontColor=#323130;align=left;verticalAlign=top;arcSize=8;strokeWidth=3;spacing=8;fontStyle=1;fontFamily=Segoe UI;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="1076" width="300" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="mode_c" value="C — Split plane&#10;&#10;Machine traffic → governed via API Management.&#10;Interactive clients → direct to the runtime using&#10;OAuth discovery (RFC 9728 protected resource metadata).&#10;&#10;CAUTION: the direct route bypasses quota and metering." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#605E5C;fontSize=10;fontColor=#323130;align=left;verticalAlign=top;arcSize=8;strokeWidth=2;spacing=8;fontFamily=Segoe UI;" vertex="1" parent="1">
+          <mxGeometry x="1560" y="1076" width="300" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="confused" value="Why B is the default:  giving the gateway a managed identity replaces the caller's Authorization header, so the runtime only ever sees the gateway.&#10;That is a textbook CONFUSED DEPUTY — the gateway acts on behalf of callers whose identity it has discarded. Mode B makes that a deliberate choice, not an accident." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FDE7E9;strokeColor=#A4262C;fontSize=11;fontColor=#A4262C;align=left;verticalAlign=middle;arcSize=8;strokeWidth=2;spacing=8;fontFamily=Segoe UI;" vertex="1" parent="1">
+          <mxGeometry x="60" y="960" width="1800" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="mode_b__tag0" value="DEFAULT" style="rounded=1;arcSize=50;html=1;whiteSpace=nowrap;fillColor=#0078D4;strokeColor=#FFFFFF;strokeWidth=1.5;fontColor=#FFFFFF;fontStyle=1;fontSize=9;align=center;verticalAlign=middle;fontFamily=Segoe UI;" vertex="1" parent="1">
+          <mxGeometry x="1469" y="1067" width="61" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="rs_bar1" value="" style="rounded=0;fillColor=#0078D4;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="40" y="-6" width="1001" height="6" as="geometry" />
+        </mxCell>
+        <mxCell id="rs_bar2" value="" style="rounded=0;fillColor=#5C2D91;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1041" y="-6" width="819" height="6" as="geometry" />
+        </mxCell>
+        <mxCell id="rs_legend" value="&lt;b&gt;Legend&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;fontSize=12;fontColor=#201F1E;fontFamily=Segoe UI;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1272" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="rs_lg_DEFAULT" value="DEFAULT" style="rounded=1;arcSize=50;html=1;whiteSpace=nowrap;fillColor=#0078D4;strokeColor=#FFFFFF;strokeWidth=1.5;fontColor=#FFFFFF;fontStyle=1;fontSize=9;align=center;verticalAlign=middle;fontFamily=Segoe UI;" vertex="1" parent="1">
+          <mxGeometry x="110" y="1273" width="61" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="rs_lgt_DEFAULT" value="the path the demo takes by default" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;fontColor=#605E5C;fontFamily=Segoe UI;" vertex="1" parent="1">
+          <mxGeometry x="177" y="1272" width="248" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="rs_footer" value="Secure MCP Gateway Landing Zone | Mode B identity and token flow | v2026-08-14 | Icons: Microsoft Azure Architecture Icons (V24)" style="text;html=1;align=left;verticalAlign=middle;fontSize=10;fontColor=#8A8886;fontFamily=Segoe UI;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1302" width="1820" height="20" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

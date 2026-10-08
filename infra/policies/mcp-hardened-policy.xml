@@ -1,0 +1,308 @@
+<!--
+    ============================================================================
+    Hardened MCP policy overlay — Secure MCP Gateway Landing Zone
+    ============================================================================
+
+    WHAT THIS IS
+    A per-asset policy that layers additional governance on top of the Citadel
+    baseline MCP policy. Supply it as the `policyXml` value on an `mcp-existing`
+    asset in the Publish Contract parameter file when you want tool-surface
+    allow-listing and per-consumer rate limiting beyond the product defaults.
+
+    WHY IT EXISTS
+    The MCP runtime does not currently implement per-tool authorization or rate
+    limiting (see docs/01-architecture.md "Compensating controls"). Those controls are
+    supplied here, at the gateway edge.
+
+    ALSO IN THIS FILE
+    A custom trace policy step (inbound only) that enriches the native MCP
+    telemetry Azure API Management already emits with zero configuration
+    (OpenTelemetry gen_ai.* fields such as operation name, tool name, and
+    session id; see Microsoft Learn "Monitor MCP server traffic") with
+    dimensions that schema does not carry: a caller-supplied agent id,
+    subscription/product attribution, and the JSON-RPC method, all in one
+    correlated event tied to the same correlation id used elsewhere in this
+    file. See docs/04-testing.md section 8 for the corresponding verification
+    suite.
+
+    ============================================================================
+    HARD CONSTRAINT — DO NOT VIOLATE
+    ============================================================================
+    MCP responses stream over Server-Sent Events. Reading context.Response.Body
+    forces response buffering and BREAKS STREAMING. Every control in this file is
+    therefore INBOUND ONLY.
+
+      NEVER add to this policy (or any MCP policy):
+        - context.Response.Body.As<...>()          -> buffers the SSE stream
+        - <validate-content> on the outbound path  -> buffers the SSE stream
+        - PII de-anonymization on the response     -> buffers the SSE stream
+        - <json-to-xml> / <xml-to-json> outbound   -> buffers the SSE stream
+
+    Reading context.Request.Body IS safe and is used below. Always pass
+    preserveContent: true so the body still reaches the backend.
+    ============================================================================
+
+    ============================================================================
+    XML ESCAPING — WHY THIS FILE LOOKS THE WAY IT DOES
+    ============================================================================
+    Policy expressions live inside XML *attributes* (condition="...", value="..."),
+    so every double quote inside a C# expression MUST be written as &quot;, and
+    every < or > as &lt; / &gt;. A literal " inside an attribute terminates the
+    attribute and produces an XML parse error at deployment time.
+
+        WRONG:  condition="@(context.Variables["x"] == "y")"
+        RIGHT:  condition="@(context.Variables[&quot;x&quot;] == &quot;y&quot;)"
+
+    Expressions in element *content* (inside <value> or <set-body>) do NOT need
+    escaping, which is why those below use plain quotes.
+
+    Validate before deploying:
+        [xml](Get-Content mcp-hardened-policy.xml -Raw)     # PowerShell
+        python -c "import xml.dom.minidom as m; m.parse('mcp-hardened-policy.xml')"
+    ============================================================================
+
+    NAMED VALUES REQUIRED IN API MANAGEMENT
+      mcp-allowed-tools   Comma-separated allow-list of permitted MCP tool names.
+                          Set to "*" to allow every tool (allow-listing disabled).
+                          Example: "echo,describe_environment,search_documents"
+
+    PLACEHOLDERS TO REPLACE BEFORE USE
+      {{mcp-allowed-tools}}   -> API Management named value (leave as-is; resolved at runtime)
+      RATE_LIMIT_CALLS        -> integer, calls per renewal period per subscription
+      RATE_LIMIT_PERIOD       -> integer, renewal period in seconds
+      MAX_REQUEST_BYTES       -> integer, max inbound JSON-RPC payload in bytes (e.g. 262144)
+
+    Last updated: 2026-08-14
+-->
+<policies>
+    <inbound>
+        <!--
+            Inherit the Citadel baseline MCP policy:
+              - security-handler : subscription key (+ optional per-product JWT)
+              - mcp-usage        : inbound request-count metric for FinOps
+
+            NEVER remove this <base /> — dropping it silently disables
+            authentication and metering while the endpoint keeps working.
+        -->
+        <base />
+
+        <!-- ================================================================
+             1. Correlation
+             Stamp a correlation id so one logical MCP call can be traced
+             across API Management, the MCP runtime, and the server pod.
+             ================================================================ -->
+        <set-variable name="mcpCorrelationId" value="@(context.RequestId.ToString())" />
+        <set-header name="X-Correlation-Id" exists-action="skip">
+            <value>@((string)context.Variables["mcpCorrelationId"])</value>
+        </set-header>
+
+        <!-- ================================================================
+             2. Payload size guard
+             Reject oversized JSON-RPC envelopes before they reach the runtime.
+             Uses the declared Content-Length, so no body read is required.
+             ================================================================ -->
+        <choose>
+            <when condition="@{
+                var raw = context.Request.Headers.GetValueOrDefault(&quot;Content-Length&quot;, &quot;0&quot;);
+                long len;
+                if (!long.TryParse(raw, out len)) { return false; }
+                return len &gt; MAX_REQUEST_BYTES;
+            }">
+                <return-response>
+                    <set-status code="413" reason="Payload Too Large" />
+                    <set-header name="Content-Type" exists-action="override">
+                        <value>application/json</value>
+                    </set-header>
+                    <set-body>@{
+                        var payload = new JObject(
+                            new JProperty("jsonrpc", "2.0"),
+                            new JProperty("error", new JObject(
+                                new JProperty("code", -32600),
+                                new JProperty("message", "Request payload exceeds the gateway limit for MCP calls.")
+                            )),
+                            new JProperty("id", null)
+                        );
+                        return payload.ToString(Newtonsoft.Json.Formatting.None);
+                    }</set-body>
+                </return-response>
+            </when>
+        </choose>
+
+        <!-- ================================================================
+             3. Extract the JSON-RPC method and tool name
+
+             preserveContent: true is MANDATORY. Without it the body is consumed
+             here and never reaches the backend.
+
+             Reading the REQUEST body is safe. Reading the RESPONSE body is not
+             — see the hard constraint at the top of this file.
+             ================================================================ -->
+        <set-variable name="mcpMethod" value="@{
+            try {
+                var body = context.Request.Body?.As&lt;JObject&gt;(preserveContent: true);
+                if (body == null) { return string.Empty; }
+                var m = body[&quot;method&quot;];
+                return m == null ? string.Empty : m.ToString();
+            } catch (Exception) {
+                return string.Empty;
+            }
+        }" />
+
+        <set-variable name="mcpToolName" value="@{
+            try {
+                var body = context.Request.Body?.As&lt;JObject&gt;(preserveContent: true);
+                if (body == null) { return string.Empty; }
+                var p = body[&quot;params&quot;];
+                if (p == null) { return string.Empty; }
+                var n = p[&quot;name&quot;];
+                return n == null ? string.Empty : n.ToString();
+            } catch (Exception) {
+                return string.Empty;
+            }
+        }" />
+
+        <!-- ================================================================
+             4. Custom trace enrichment for MCP telemetry
+
+             WHY: Azure API Management already emits rich native MCP telemetry
+             to Application Insights with zero configuration: OpenTelemetry
+             gen_ai.* fields (operation name, tool name, session/conversation
+             id, user agent, auth type; per Microsoft Learn "Monitor MCP
+             server traffic", last updated 2026-06-30). That built-in schema
+             does NOT carry agent-level or subscription/product attribution
+             alongside the JSON-RPC method in one correlated event. The trace
+             policy is the documented mechanism (Microsoft Learn "About MCP
+             servers in Azure API Management") for adding exactly that kind
+             of custom dimension at MCP server scope.
+
+             This step only reads variables already set earlier in <inbound>
+             (mcpCorrelationId from section 1, mcpMethod from section 3) plus
+             safely-defaulted context/header values; it performs no request
+             or response body reads of its own. It emits a trace entry only.
+             Like every other control in this file it is INBOUND ONLY and
+             must never be duplicated in <outbound> or made to read
+             context.Response.Body.
+             ================================================================ -->
+        <set-variable name="mcpAgentId" value="@{
+            var agentId = context.Request.Headers.GetValueOrDefault(&quot;x-agent-id&quot;, string.Empty);
+            return string.IsNullOrWhiteSpace(agentId) ? &quot;unspecified&quot; : agentId;
+        }" />
+        <set-variable name="mcpSubscriptionName" value="@(context.Subscription != null ? context.Subscription.Name : &quot;unknown&quot;)" />
+        <set-variable name="mcpProductName" value="@(context.Product != null ? context.Product.Name : &quot;unknown&quot;)" />
+        <trace source="mcp-hardened-overlay" severity="information">
+            <message>@("MCP inbound request: " + (string)context.Variables["mcpMethod"])</message>
+            <metadata name="correlationId" value="@((string)context.Variables[&quot;mcpCorrelationId&quot;])" />
+            <metadata name="agentId" value="@((string)context.Variables[&quot;mcpAgentId&quot;])" />
+            <metadata name="subscriptionName" value="@((string)context.Variables[&quot;mcpSubscriptionName&quot;])" />
+            <metadata name="productName" value="@((string)context.Variables[&quot;mcpProductName&quot;])" />
+            <metadata name="jsonRpcMethod" value="@((string)context.Variables[&quot;mcpMethod&quot;])" />
+        </trace>
+
+        <!-- ================================================================
+             5. Tool-surface allow-listing
+
+             Gates ONLY tools/call. The handshake (initialize), notifications,
+             and tools/list pass freely so discovery still works — this control
+             governs INVOCATION, not visibility.
+
+             Fails closed: a tools/call with no tool name is blocked.
+             Set the named value to "*" to disable allow-listing explicitly.
+             ================================================================ -->
+        <choose>
+            <when condition="@(((string)context.Variables[&quot;mcpMethod&quot;]) == &quot;tools/call&quot;)">
+                <choose>
+                    <when condition="@{
+                        var allowed = &quot;{{mcp-allowed-tools}}&quot;;
+                        if (string.IsNullOrWhiteSpace(allowed) || allowed.Trim() == &quot;*&quot;) {
+                            return false;
+                        }
+                        var requested = (string)context.Variables[&quot;mcpToolName&quot;];
+                        if (string.IsNullOrWhiteSpace(requested)) {
+                            return true;
+                        }
+                        var permitted = allowed
+                            .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                            .Select(t =&gt; t.Trim())
+                            .Where(t =&gt; t.Length &gt; 0);
+                        return !permitted.Contains(requested, StringComparer.OrdinalIgnoreCase);
+                    }">
+                        <return-response>
+                            <set-status code="403" reason="Forbidden" />
+                            <set-header name="Content-Type" exists-action="override">
+                                <value>application/json</value>
+                            </set-header>
+                            <set-header name="X-Correlation-Id" exists-action="override">
+                                <value>@((string)context.Variables["mcpCorrelationId"])</value>
+                            </set-header>
+                            <set-body>@{
+                                var tool = (string)context.Variables["mcpToolName"];
+                                var safeTool = string.IsNullOrWhiteSpace(tool) ? "unspecified" : tool;
+                                var payload = new JObject(
+                                    new JProperty("jsonrpc", "2.0"),
+                                    new JProperty("error", new JObject(
+                                        new JProperty("code", -32601),
+                                        new JProperty("message", "Tool '" + safeTool + "' is not permitted for this subscription on this published asset.")
+                                    )),
+                                    new JProperty("id", null)
+                                );
+                                return payload.ToString(Newtonsoft.Json.Formatting.None);
+                            }</set-body>
+                        </return-response>
+                    </when>
+                </choose>
+            </when>
+        </choose>
+
+        <!-- ================================================================
+             6. Per-subscription rate ceiling
+
+             The Access Contract product supplies the primary quota envelope.
+             This is an additional per-asset ceiling so one noisy asset cannot
+             consume a business unit's entire allowance.
+
+             Replace RATE_LIMIT_CALLS and RATE_LIMIT_PERIOD before deploying.
+             ================================================================ -->
+        <rate-limit-by-key calls="RATE_LIMIT_CALLS"
+                           renewal-period="RATE_LIMIT_PERIOD"
+                           counter-key="@(context.Subscription?.Id ?? context.Request.IpAddress)"
+                           remaining-calls-header-name="X-RateLimit-Remaining"
+                           total-calls-header-name="X-RateLimit-Limit" />
+    </inbound>
+
+    <backend>
+        <!--
+            Inherit baseline backend behaviour, which forwards to the Publish
+            Contract backend. The circuit breaker is configured on the backend
+            resource itself, not here.
+        -->
+        <base />
+    </backend>
+
+    <outbound>
+        <!--
+            ####################################################################
+            INTENTIONALLY MINIMAL — HEADER MANIPULATION ONLY.
+
+            Do NOT add response inspection here. MCP streams over SSE, and any
+            policy that touches context.Response.Body buffers the stream and
+            breaks the protocol. Header-only manipulation is safe; body access
+            is not.
+
+            After ANY change to this section, re-run the streaming integrity
+            test in docs/04-testing.md section 7.
+            ####################################################################
+        -->
+        <base />
+        <set-header name="X-Correlation-Id" exists-action="override">
+            <value>@((string)context.Variables["mcpCorrelationId"])</value>
+        </set-header>
+    </outbound>
+
+    <on-error>
+        <!-- Inherits opt-in alerting (auth / backend / throttling) from the baseline. -->
+        <base />
+        <set-header name="X-Correlation-Id" exists-action="override">
+            <value>@(context.Variables.ContainsKey("mcpCorrelationId") ? (string)context.Variables["mcpCorrelationId"] : "unknown")</value>
+        </set-header>
+    </on-error>
+</policies>
