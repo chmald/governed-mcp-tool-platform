@@ -30,7 +30,7 @@ Read [01-architecture.md](./01-architecture.md) first, especially [The streaming
 
 An organization that already governs LLM traffic through an AI gateway is being asked to add MCP tool traffic to the same front door. Before doing that, the reasonable question is: **can MCP tool calls be monitored and governed to the same standard this organization already holds model traffic to** — the same authentication model, the same per-consumer entitlement, the same request-level telemetry, the same chargeback discipline, the same latency and error dashboards? Or is MCP a second-class citizen on the gateway, observable only through custom instrumentation nobody has built yet?
 
-The honest answer has two halves, and both matter: most of what makes model-traffic governance trustworthy today is **already present for MCP, natively**, because Azure API Management treats MCP as a first-class, semantically-understood API type rather than an opaque HTTP proxy target. But one piece of the model-governance story — token-based metering — has no equivalent for tool calls, for a structural reason, not a product gap. This document draws the line precisely, so nobody discovers it by surprise in front of a customer.
+The honest answer has two halves, and both matter: most of what makes model-traffic governance trustworthy today is **already present for MCP, natively**, because Azure API Management treats MCP as a first-class, semantically-understood API type rather than an opaque HTTP proxy target. But one piece of the model-governance story — token-based metering — has no equivalent for tool calls, for a structural reason, not a product gap. This document draws the line precisely, so nobody discovers it by surprise in production or mid-demo.
 
 ---
 

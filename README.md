@@ -266,7 +266,7 @@ Any hit is a hard block — clean the tree and rotate anything that leaked.
 | `Azure-Samples/ai-hub-gateway-solution-accelerator` | `citadel-v1` | `06f7ea6c2f99371900feefba11c10212b16364b4` | 2026-08-14 |
 | `microsoft/mcp-gateway` | `main` | `59201a91f0c033dab7259f7c3c27be15353dafa4` | 2026-08-14 |
 
-`microsoft/mcp-gateway` publishes **no releases and no tags** — the commit SHA is the only durable pin. `citadel-v1` is an active branch that was content-identical to `main` at verification time; re-check before a customer-facing build.
+`microsoft/mcp-gateway` publishes **no releases and no tags** — the commit SHA is the only durable pin. `citadel-v1` is an active branch that was content-identical to `main` at verification time; re-check before a production build.
 
 ---
 
